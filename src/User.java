@@ -13,6 +13,7 @@ public class User extends Person {
     private UserType userType;
     public ArrayList<Forum> forums = new ArrayList<>();
     public ArrayList<Rate> rates = new ArrayList<>(); //for accessing user rated movie data.
+    public ArrayList<Direct> directs = new ArrayList<>();
 
     public User(String name, String lastName, int age, String bioDetail, String userName, String password, String email, String phoneNumber, UserStatus status, UserType userType) {
         super(name, lastName, age, bioDetail);
@@ -250,13 +251,13 @@ public class User extends Person {
             i++;
         }
         int respond = Integer.parseInt(scanner.nextLine());
-        if (this.following.get(respond-1) instanceof User)
+        if (this.following.get(respond - 1) instanceof User)
             System.out.println(((User) this.following.get(respond - 1)).showUserInfo());
         else
             System.out.println(this.following.get(respond - 1).showPersonInfo());
     }
 
-    public void showFollower(){
+    public void showFollower() {
         int i = 1;
         for (User user : this.Followers) {
             System.out.println(i + "." + user.getName() + " " + user.getLastName() + " : " + user.getUserName());
@@ -276,6 +277,41 @@ public class User extends Person {
                 "phoneNumber: " + phoneNumber + '\n';
     }
 
+    public void creatDirect() {
+        System.out.print("Enter user username: ");
+        String username = scanner.nextLine();
+        User user2 = null;
+        for (User user : Main.users) {
+            if (user.getUserName().compareTo(username) == 0) {
+                user2 = user;
+                break;
+            }
+        }
+        if (user2 != null) {
+            System.out.print("Enter your message: ");
+            String message = scanner.nextLine();
+            Direct direct = Direct.creatNewDirect(this, user2, message);
+            this.directs.add(direct);
+            user2.directs.add(direct);
+        } else
+            System.out.println("user not found!");
+    }
+
+    public void openDirect() {
+        for (int i = 0; i < this.directs.size(); i++) {
+            if (this == this.directs.get(i).user1)
+                System.out.println(i + 1 + "." + this.directs.get(i).user2.userName);
+            else
+                System.out.println(i + 1 + "." + this.directs.get(i).user1.userName);
+        }
+        System.out.print("Enter the direct: ");
+        int respond = Integer.parseInt(scanner.nextLine());
+        try {
+            this.directs.get(respond - 1).showDirect(this);
+        } catch (Exception e) {
+            System.out.println("invalid input");
+        }
+    }
 
 
     @Override

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ public class Main {
     static ArrayList<User> users = new ArrayList<>();
     static ArrayList<Person> people = new ArrayList<>();
     static ArrayList<Forum> forums = new ArrayList<>();
-    static HashMap<Movie,Movie> editeSuggestions = new HashMap<>();
+    static HashMap<Movie, Movie> editeSuggestions = new HashMap<>();
 
     public static ArrayList<Movie> getMovies() {
         return movies;
@@ -36,7 +37,7 @@ public class Main {
         while (true) {
             User user = null;
             while (user == null) {
-                System.out.print("1.log in  2.sign up  0.exit\n--->");
+                System.out.print("1.log in  2.sign up  0.exit\n--->  ");
 
                 try {
                     int respond = Integer.parseInt(scanner.nextLine());
@@ -48,11 +49,13 @@ public class Main {
                             System.out.println("User not found!");
                         } else
                             break;
+                        continue;
                     } else if (respond == 2) {
                         user = User.addUser();
+                        continue;
                     }
+                    throw new Exception();
                 } catch (Exception e) {
-                    e.printStackTrace();
                     System.out.println("Invalid input!");
                     return;
                 }
@@ -69,7 +72,7 @@ public class Main {
                 //        else if (user.getUserType().compareTo(UserType.EDITOR)==0)
                 //            while (flaq)
                 //                flaq = editorHomePage(user);
-            }else if (user.getUserType().compareTo(UserType.EDITOR) == 0){
+            } else if (user.getUserType().compareTo(UserType.EDITOR) == 0) {
                 while (flaq)
                     flaq = editorHomePage(user);
             }
@@ -80,11 +83,11 @@ public class Main {
     static boolean adminHomePage(User admin) {
         System.out.println("1.add user  2.delete user  3.ban user  4.show users  5.show film list  6.creatList  7.show people\n" +
                 "8.see forums  9.make a forum  10.add movie  11.edit movie  12.show movies by rates  13.follow a user  14.follow an actor\n" +
-                "15.show following  16.show followers 17.show movie edit suggestions  18.recommended movies   19.search  0.log out");
+                "15.show following  16.show followers 17.show movie edit suggestions  18.recommended movies  19.creat a direct  20.open direct   21.search  0.log out");
         Movie[] suggestedMovie = {null, null, null};
         System.out.println("Newest Movies: ");
         for (int i = 0; i < movies.size() && i < 3; i++) {
-            System.out.print(i + 20 + "." + movies.get(i).getTitle() + " ");
+            System.out.print(i + 22 + "." + movies.get(i).getTitle() + " ");
             suggestedMovie[i] = movies.get(i);
         }
         System.out.println();
@@ -162,15 +165,21 @@ public class Main {
                 Movie.recommendationEngine(admin);
                 return true;
             case 19:
-                Movie.searchMovie(admin);
+                admin.creatDirect();
                 return true;
             case 20:
-                suggestedMovie[0].show(admin);
+                admin.openDirect();
                 return true;
             case 21:
-                suggestedMovie[1].show(admin);
+                Movie.searchMovie(admin);
                 return true;
             case 22:
+                suggestedMovie[0].show(admin);
+                return true;
+            case 23:
+                suggestedMovie[1].show(admin);
+                return true;
+            case 24:
                 suggestedMovie[2].show(admin);
                 return true;
         }
@@ -180,11 +189,11 @@ public class Main {
     static boolean userHomePage(User user) {
         System.out.println("1.show film list  2.creatList  3.show people 4.see forums  5.make a forum\n" +
                 "6.show movies by rates  7.follow a user  8.follow an actor/director\n" +
-                "9.show following  10.show followers 11.recommended movies  12.search  0.log out");
+                "9.show following  10.show followers 11.recommended movies  12.creat a direct  13.open direct  14.search  0.log out");
         Movie[] suggestedMovie = {null, null, null};
         System.out.println("Movies: ");
         for (int i = 0; i < movies.size() && i < 3; i++) {
-            System.out.print(i + 13 + "." + movies.get(i).getTitle() + " ");
+            System.out.print(i + 15 + "." + movies.get(i).getTitle() + " ");
             suggestedMovie[i] = movies.get(i);
         }
         System.out.println();
@@ -236,15 +245,21 @@ public class Main {
             case 11:
                 Movie.recommendationEngine(user);
             case 12:
-                Movie.searchMovie(user);
+                user.creatDirect();
                 return true;
             case 13:
-                suggestedMovie[0].show(user);
+                user.openDirect();
                 return true;
             case 14:
+                Movie.searchMovie(user);
+                return true;
+            case 15:
+                suggestedMovie[0].show(user);
+                return true;
+            case 16:
                 suggestedMovie[1].show(user);
                 return true;
-            case 25:
+            case 17:
                 suggestedMovie[2].show(user);
                 return true;
         }
@@ -254,12 +269,12 @@ public class Main {
     static boolean editorHomePage(User editor) {
         System.out.println("1.show film list  2.creatList  3.show people 4.see forums  5.make a forum\n" +
                 "6.show movies by rates  7.follow a user  8.follow an actor/director\n" +
-                "9.show following  10.show followers  11..recommended movies  12.search  0.log out\n" +
+                "9.show following  10.show followers  11..recommended movies  12.creat a direct  13.open direct  14.search  0.log out\n" +
                 "(to suggest an edit for movie open movie!)");
         Movie[] suggestedMovie = {null, null, null};
         System.out.println("Movies: ");
         for (int i = 0; i < movies.size() && i < 3; i++) {
-            System.out.print(i + 13 + "." + movies.get(i).getTitle() + " ");
+            System.out.print(i + 15 + "." + movies.get(i).getTitle() + " ");
             suggestedMovie[i] = movies.get(i);
         }
         System.out.println();
@@ -311,15 +326,21 @@ public class Main {
             case 11:
                 Movie.recommendationEngine(editor);
             case 12:
-                Movie.searchMovie(editor);
+                editor.creatDirect();
                 return true;
             case 13:
-                suggestedMovie[0].show(editor);
+                editor.openDirect();
                 return true;
             case 14:
-                suggestedMovie[1].show(editor);
+                Movie.searchMovie(editor);
                 return true;
             case 15:
+                suggestedMovie[0].show(editor);
+                return true;
+            case 16:
+                suggestedMovie[1].show(editor);
+                return true;
+            case 17:
                 suggestedMovie[2].show(editor);
                 return true;
         }
