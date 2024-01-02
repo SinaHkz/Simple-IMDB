@@ -291,7 +291,7 @@ public class Movie {
 
     public void editMovie() {
         System.out.println("Which property do you want to edit ?");
-        System.out.println("1.title  2.poster link  3.trailer link  4.summery  5.genre  6.release year");
+        System.out.println("1.title  2.poster link  3.trailer link  4.summery  5.genre  6.release year  7.delete movie");
         int respond = Integer.parseInt(scanner.nextLine());
         switch (respond) {
             case 1:
@@ -322,6 +322,10 @@ public class Movie {
             case 6:
                 System.out.println("release year: ");
                 this.releaseDate = new Date(Integer.parseInt(scanner.nextLine()));
+                return;
+            case 7:
+                System.out.println("delete movie");
+                Main.movies.remove(this);
         }
     }
 
@@ -394,7 +398,7 @@ public class Movie {
                 System.out.println("1.ACTION 2.COMEDY 3.DRAMA 4.SCIENCE_FICTION 5.FAMILY 6.BIOGRAPHY 7.ROMANCE 8.ANIMATION");
                 int genreRespond = Integer.parseInt(scanner.nextLine());
                 Genre genre = Genre.getByValue(genreRespond);
-                showMovieByGenre(genre,user);
+                showMovieByGenre(genre, user);
         }
     }
 
@@ -468,7 +472,7 @@ public class Movie {
             }
         }
         if (resultCount.get(indx) != 0)
-            showMovieByGenre(Genre.getByValue(indx + 1),user);
+            showMovieByGenre(Genre.getByValue(indx + 1), user);
         else
             showTopRatedMovies(user);
     }
